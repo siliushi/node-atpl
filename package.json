@@ -1,0 +1,14 @@
+{
+  "name": "node-atpl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/atpl.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "keven",
+  "license": "ISC"
+}

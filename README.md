@@ -1,18 +1,41 @@
 # aTpl
 JavaScript template
 
-# Usage
+# Usage  
 
-## value   
+## 注释标签，不执行，也没有输出  
 
-{{ value }}  
+{{#  }}  
 
-## filter  
+## 向模板输出值（带有转义）    
 
-{{=: value | upcase }}  
+{{= value }}  
 
-## grammar  
+## 向模板输出没有转义的值  
 
-{{ if(true) { }}
-	{{ console.log(true) }}
-{{ } }}
+{{- value }}  
+
+## filter    
+
+{{=: value | upcase }}   
+
+    
+## grammar   
+
+{{ if(true) { }}   
+	{{ console.log(true) }}  
+{{ } }}   
+    
+# express-atpl     
+     
+```
+var atpl = require('node-atpl');   
+app.engine('.atpl', atpl.__express);   
+app.set('view engine', 'atpl');   
+   
+// router   
+app.get('/', function(req, res) {   
+	var data = {};   
+	res.render('index', data);   
+});   
+```

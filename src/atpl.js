@@ -1,9 +1,10 @@
 /*!
  * ATPL
+ * template engine
  */
-
 /**
- * Module dependencies.
+ * author: keven
+ * date: 2016-10-20
  */
 
 var utils = require('./utils/index')
@@ -15,38 +16,23 @@ var utils = require('./utils/index')
   , read = fs.readFileSync;
 
 /**
- * Filters.
+ * 过滤器
  *
  * @type Object
  */
 
 var filters = exports.filters = require('./filters/index');
 
-/**
- * Intermediate js cache.
- *
- * @type Object
- */
+
 
 var cache = {};
 
-/**
- * Clear intermediate js cache.
- *
- * @api public
- */
+
 
 exports.clearCache = function(){
   cache = {};
 };
 
-/**
- * Translate filtered code into function calls.
- *
- * @param {String} js
- * @return {String}
- * @api private
- */
 
 function filtered(js) {
   return js.substr(1).split('|').reduce(function(js, filter){
@@ -58,16 +44,6 @@ function filtered(js) {
   });
 };
 
-/**
- * Re-throw the given `err` in context to the
- * `str` of atpl, `filename`, and `lineno`.
- *
- * @param {Error} err
- * @param {String} str
- * @param {String} filename
- * @param {String} lineno
- * @api private
- */
 
 function rethrow(err, str, filename, lineno){
   var lines = str.split('\n')
@@ -93,13 +69,6 @@ function rethrow(err, str, filename, lineno){
   throw err;
 }
 
-/**
- * Parse the given `str` of atpl, returning the function body.
- *
- * @param {String} str
- * @return {String}
- * @api public
- */
 
 var parse = exports.parse = function(str, options){
   var options = options || {}
@@ -171,7 +140,7 @@ var parse = exports.parse = function(str, options){
           js = filtered(js);
           break;
         case '%':
-          js = " buf.push('<%" + js.substring(1).replace(/'/g, "\\'") + "%>');";
+          js = " buf.push('{{" + js.substring(1).replace(/'/g, "\\'") + "}}');";
           break;
         case '#':
           js = "";
@@ -209,14 +178,6 @@ var parse = exports.parse = function(str, options){
   return buf;
 };
 
-/**
- * Compile the given `str` of atpl into a `Function`.
- *
- * @param {String} str
- * @param {Object} options
- * @return {Function}
- * @api public
- */
 
 var compile = exports.compile = function(str, options){
   options = options || {};
@@ -265,24 +226,6 @@ var compile = exports.compile = function(str, options){
   }
 };
 
-/**
- * Render the given `str` of atpl.
- *
- * Options:
- *
- *   - `locals`          Local variables object
- *   - `cache`           Compiled functions are cached, requires `filename`
- *   - `filename`        Used by `cache` to key caches
- *   - `scope`           Function execution context
- *   - `debug`           Output generated function body
- *   - `open`            Open tag, defaulting to "<%"
- *   - `close`           Closing tag, defaulting to "%>"
- *
- * @param {String} str
- * @param {Object} options
- * @return {String}
- * @api public
- */
 
 exports.render = function(str, options){
   var fn
@@ -302,14 +245,6 @@ exports.render = function(str, options){
   return fn.call(options.scope, options);
 };
 
-/**
- * Render an TPL file at the given `path` and callback `fn(err, str)`.
- *
- * @param {String} path
- * @param {Object|Function} options or callback
- * @param {Function} fn
- * @api public
- */
 
 exports.renderFile = function(path, options, fn){
   var key = path + ':string';
@@ -332,19 +267,12 @@ exports.renderFile = function(path, options, fn){
   fn(null, exports.render(str, options));
 };
 
-/**
- * Resolve include `name` relative to `filename`.
- *
- * @param {String} name
- * @param {String} filename
- * @return {String}
- * @api private
- */
+
 
 function resolveInclude(name, filename) {
   var path = join(dirname(filename), name);
   var ext = extname(name);
-  if (!ext) path += '.tpl';
+  if (!ext) path += '.atpl';
   return path;
 }
 
@@ -352,12 +280,10 @@ function resolveInclude(name, filename) {
 
 exports.__express = exports.renderFile;
 
-/**
- * Expose to require().
- */
+
 
 if (require.extensions) {
-  require.extensions['.tpl'] = function (module, filename) {
+  require.extensions['.atpl'] = function (module, filename) {
     filename = filename || module.filename;
     var options = { filename: filename, client: true }
       , template = fs.readFileSync(filename).toString()
@@ -365,7 +291,7 @@ if (require.extensions) {
     module._compile('module.exports = ' + fn.toString() + ';', filename);
   };
 } else if (require.registerExtension) {
-  require.registerExtension('.tpl', function(src) {
+  require.registerExtension('.atpl', function(src) {
     return compile(src, {});
   });
 }

@@ -4,7 +4,7 @@
  */
 
 /**
- * Escape the given string of `html`.
+ * 转码.
  *
  * @param {String} html
  * @return {String}

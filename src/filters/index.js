@@ -1,9 +1,10 @@
 /*!
  * ATPL - Filters
+ * 过滤器
  */
 
 /**
- * First element of the target `obj`.
+ * 返回第一个元素.
  */
 
 exports.first = function(obj) {
@@ -11,7 +12,7 @@ exports.first = function(obj) {
 };
 
 /**
- * Last element of the target `obj`.
+ * 返回最后一个元素
  */
 
 exports.last = function(obj) {
@@ -19,7 +20,7 @@ exports.last = function(obj) {
 };
 
 /**
- * Capitalize the first letter of the target `str`.
+ * 首字母大写
  */
 
 exports.capitalize = function(str){
@@ -28,7 +29,7 @@ exports.capitalize = function(str){
 };
 
 /**
- * Downcase the target `str`.
+ * 小写
  */
 
 exports.downcase = function(str){
@@ -36,7 +37,7 @@ exports.downcase = function(str){
 };
 
 /**
- * Uppercase the target `str`.
+ * 大写
  */
 
 exports.upcase = function(str){
@@ -44,7 +45,7 @@ exports.upcase = function(str){
 };
 
 /**
- * Sort the target `obj`.
+ * 排序
  */
 
 exports.sort = function(obj){
@@ -52,7 +53,8 @@ exports.sort = function(obj){
 };
 
 /**
- * Sort the target `obj` by the given `prop` ascending.
+ * 根据key排序
+ * 
  */
 
 exports.sort_by = function(obj, prop){
@@ -65,7 +67,7 @@ exports.sort_by = function(obj, prop){
 };
 
 /**
- * Size or length of the target `obj`.
+ * 返回对象的长度
  */
 
 exports.size = exports.length = function(obj) {
@@ -73,7 +75,7 @@ exports.size = exports.length = function(obj) {
 };
 
 /**
- * Add `a` and `b`.
+ * 两数相加
  */
 
 exports.plus = function(a, b){
@@ -81,7 +83,7 @@ exports.plus = function(a, b){
 };
 
 /**
- * Subtract `b` from `a`.
+ * 两书相减
  */
 
 exports.minus = function(a, b){
@@ -89,7 +91,7 @@ exports.minus = function(a, b){
 };
 
 /**
- * Multiply `a` by `b`.
+ * 两数相乘
  */
 
 exports.times = function(a, b){
@@ -97,7 +99,7 @@ exports.times = function(a, b){
 };
 
 /**
- * Divide `a` by `b`.
+ * 两书相除
  */
 
 exports.divided_by = function(a, b){
@@ -105,7 +107,7 @@ exports.divided_by = function(a, b){
 };
 
 /**
- * Join `obj` with the given `str`.
+ * 字符串合并
  */
 
 exports.join = function(obj, str){
@@ -113,7 +115,8 @@ exports.join = function(obj, str){
 };
 
 /**
- * Truncate `str` to `len`.
+ * 截断str超出的len部分，并且加上append
+ * 
  */
 
 exports.truncate = function(str, len, append){
@@ -174,7 +177,7 @@ exports.map = function(arr, prop){
 };
 
 /**
- * Reverse the given `obj`.
+ * 反序对象
  */
 
 exports.reverse = function(obj){
@@ -184,7 +187,7 @@ exports.reverse = function(obj){
 };
 
 /**
- * Get `prop` of the given `obj`.
+ * 获取对象的属性值
  */
 
 exports.get = function(obj, prop){
@@ -192,7 +195,7 @@ exports.get = function(obj, prop){
 };
 
 /**
- * Packs the given `obj` into json string
+ * JSON序列化
  */
 exports.json = function(obj){
   return JSON.stringify(obj);

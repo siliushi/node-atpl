@@ -52,10 +52,11 @@ require.relative = function (parent) {
 require.register("atpl.js", function(module, exports, require){
 /*!
  * ATPL
+ * template engine
  */
-
 /**
- * Module dependencies.
+ * author: keven
+ * date: 2016-10-20
  */
 
 var utils = require('./utils/index')
@@ -67,38 +68,23 @@ var utils = require('./utils/index')
   , read = fs.readFileSync;
 
 /**
- * Filters.
+ * 过滤器
  *
  * @type Object
  */
 
 var filters = exports.filters = require('./filters/index');
 
-/**
- * Intermediate js cache.
- *
- * @type Object
- */
+
 
 var cache = {};
 
-/**
- * Clear intermediate js cache.
- *
- * @api public
- */
+
 
 exports.clearCache = function(){
   cache = {};
 };
 
-/**
- * Translate filtered code into function calls.
- *
- * @param {String} js
- * @return {String}
- * @api private
- */
 
 function filtered(js) {
   return js.substr(1).split('|').reduce(function(js, filter){
@@ -110,16 +96,6 @@ function filtered(js) {
   });
 };
 
-/**
- * Re-throw the given `err` in context to the
- * `str` of atpl, `filename`, and `lineno`.
- *
- * @param {Error} err
- * @param {String} str
- * @param {String} filename
- * @param {String} lineno
- * @api private
- */
 
 function rethrow(err, str, filename, lineno){
   var lines = str.split('\n')
@@ -145,13 +121,6 @@ function rethrow(err, str, filename, lineno){
   throw err;
 }
 
-/**
- * Parse the given `str` of atpl, returning the function body.
- *
- * @param {String} str
- * @return {String}
- * @api public
- */
 
 var parse = exports.parse = function(str, options){
   var options = options || {}
@@ -223,7 +192,7 @@ var parse = exports.parse = function(str, options){
           js = filtered(js);
           break;
         case '%':
-          js = " buf.push('<%" + js.substring(1).replace(/'/g, "\\'") + "%>');";
+          js = " buf.push('{{" + js.substring(1).replace(/'/g, "\\'") + "}}');";
           break;
         case '#':
           js = "";
@@ -261,14 +230,6 @@ var parse = exports.parse = function(str, options){
   return buf;
 };
 
-/**
- * Compile the given `str` of atpl into a `Function`.
- *
- * @param {String} str
- * @param {Object} options
- * @return {Function}
- * @api public
- */
 
 var compile = exports.compile = function(str, options){
   options = options || {};
@@ -317,24 +278,6 @@ var compile = exports.compile = function(str, options){
   }
 };
 
-/**
- * Render the given `str` of atpl.
- *
- * Options:
- *
- *   - `locals`          Local variables object
- *   - `cache`           Compiled functions are cached, requires `filename`
- *   - `filename`        Used by `cache` to key caches
- *   - `scope`           Function execution context
- *   - `debug`           Output generated function body
- *   - `open`            Open tag, defaulting to "<%"
- *   - `close`           Closing tag, defaulting to "%>"
- *
- * @param {String} str
- * @param {Object} options
- * @return {String}
- * @api public
- */
 
 exports.render = function(str, options){
   var fn
@@ -354,14 +297,6 @@ exports.render = function(str, options){
   return fn.call(options.scope, options);
 };
 
-/**
- * Render an TPL file at the given `path` and callback `fn(err, str)`.
- *
- * @param {String} path
- * @param {Object|Function} options or callback
- * @param {Function} fn
- * @api public
- */
 
 exports.renderFile = function(path, options, fn){
   var key = path + ':string';
@@ -384,19 +319,12 @@ exports.renderFile = function(path, options, fn){
   fn(null, exports.render(str, options));
 };
 
-/**
- * Resolve include `name` relative to `filename`.
- *
- * @param {String} name
- * @param {String} filename
- * @return {String}
- * @api private
- */
+
 
 function resolveInclude(name, filename) {
   var path = join(dirname(filename), name);
   var ext = extname(name);
-  if (!ext) path += '.tpl';
+  if (!ext) path += '.atpl';
   return path;
 }
 
@@ -404,12 +332,10 @@ function resolveInclude(name, filename) {
 
 exports.__express = exports.renderFile;
 
-/**
- * Expose to require().
- */
+
 
 if (require.extensions) {
-  require.extensions['.tpl'] = function (module, filename) {
+  require.extensions['.atpl'] = function (module, filename) {
     filename = filename || module.filename;
     var options = { filename: filename, client: true }
       , template = fs.readFileSync(filename).toString()
@@ -417,7 +343,7 @@ if (require.extensions) {
     module._compile('module.exports = ' + fn.toString() + ';', filename);
   };
 } else if (require.registerExtension) {
-  require.registerExtension('.tpl', function(src) {
+  require.registerExtension('.atpl', function(src) {
     return compile(src, {});
   });
 }
@@ -427,10 +353,11 @@ if (require.extensions) {
 require.register("filters/index.js", function(module, exports, require){
 /*!
  * ATPL - Filters
+ * 过滤器
  */
 
 /**
- * First element of the target `obj`.
+ * 返回第一个元素.
  */
 
 exports.first = function(obj) {
@@ -438,7 +365,7 @@ exports.first = function(obj) {
 };
 
 /**
- * Last element of the target `obj`.
+ * 返回最后一个元素
  */
 
 exports.last = function(obj) {
@@ -446,7 +373,7 @@ exports.last = function(obj) {
 };
 
 /**
- * Capitalize the first letter of the target `str`.
+ * 首字母大写
  */
 
 exports.capitalize = function(str){
@@ -455,7 +382,7 @@ exports.capitalize = function(str){
 };
 
 /**
- * Downcase the target `str`.
+ * 小写
  */
 
 exports.downcase = function(str){
@@ -463,7 +390,7 @@ exports.downcase = function(str){
 };
 
 /**
- * Uppercase the target `str`.
+ * 大写
  */
 
 exports.upcase = function(str){
@@ -471,7 +398,7 @@ exports.upcase = function(str){
 };
 
 /**
- * Sort the target `obj`.
+ * 排序
  */
 
 exports.sort = function(obj){
@@ -479,7 +406,8 @@ exports.sort = function(obj){
 };
 
 /**
- * Sort the target `obj` by the given `prop` ascending.
+ * 根据key排序
+ * 
  */
 
 exports.sort_by = function(obj, prop){
@@ -492,7 +420,7 @@ exports.sort_by = function(obj, prop){
 };
 
 /**
- * Size or length of the target `obj`.
+ * 返回对象的长度
  */
 
 exports.size = exports.length = function(obj) {
@@ -500,7 +428,7 @@ exports.size = exports.length = function(obj) {
 };
 
 /**
- * Add `a` and `b`.
+ * 两数相加
  */
 
 exports.plus = function(a, b){
@@ -508,7 +436,7 @@ exports.plus = function(a, b){
 };
 
 /**
- * Subtract `b` from `a`.
+ * 两书相减
  */
 
 exports.minus = function(a, b){
@@ -516,7 +444,7 @@ exports.minus = function(a, b){
 };
 
 /**
- * Multiply `a` by `b`.
+ * 两数相乘
  */
 
 exports.times = function(a, b){
@@ -524,7 +452,7 @@ exports.times = function(a, b){
 };
 
 /**
- * Divide `a` by `b`.
+ * 两书相除
  */
 
 exports.divided_by = function(a, b){
@@ -532,7 +460,7 @@ exports.divided_by = function(a, b){
 };
 
 /**
- * Join `obj` with the given `str`.
+ * 字符串合并
  */
 
 exports.join = function(obj, str){
@@ -540,7 +468,8 @@ exports.join = function(obj, str){
 };
 
 /**
- * Truncate `str` to `len`.
+ * 截断str超出的len部分，并且加上append
+ * 
  */
 
 exports.truncate = function(str, len, append){
@@ -601,7 +530,7 @@ exports.map = function(arr, prop){
 };
 
 /**
- * Reverse the given `obj`.
+ * 反序对象
  */
 
 exports.reverse = function(obj){
@@ -611,7 +540,7 @@ exports.reverse = function(obj){
 };
 
 /**
- * Get `prop` of the given `obj`.
+ * 获取对象的属性值
  */
 
 exports.get = function(obj, prop){
@@ -619,7 +548,7 @@ exports.get = function(obj, prop){
 };
 
 /**
- * Packs the given `obj` into json string
+ * JSON序列化
  */
 exports.json = function(obj){
   return JSON.stringify(obj);
@@ -634,7 +563,7 @@ require.register("utils/index.js", function(module, exports, require){
  */
 
 /**
- * Escape the given string of `html`.
+ * 转码.
  *
  * @param {String} html
  * @return {String}

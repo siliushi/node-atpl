@@ -497,7 +497,6 @@ exports.layout = function(vm) {
       
       // layout
       if( layout ){
-        console.log(layout);
         // first render normally
         _render(name, options, function(err, body){
           if( err )
@@ -507,7 +506,7 @@ exports.layout = function(vm) {
           options.body = body;
 
           // calculate the layout vars
-          var ext = extname(name) || '.'+(res.app.get('view engine') || 'ejs');
+          var ext = extname(name) || '.'+(res.app.get('view engine') || 'atpl');
           var root = req.app.get('views') || process.cwd() + '/views';
           var dir = dirname(layout) == '.' ? root : resolve(root,dirname(layout));
           var filename = dir+(path.sep||'/')+basename(layout,ext)+ext;
@@ -516,7 +515,6 @@ exports.layout = function(vm) {
           // If so, render it. If not, then fallback to just the original template
           if (exists(filename)) {
             layout = dirname(lookup(dir, layout, ext))+(path.sep||'/')+basename(layout,ext)+ext;
-            console.log(options);
             _render(layout, options, fn);
           } else {
             // layout may be in the same folder than the view

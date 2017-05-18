@@ -38,4 +38,34 @@ app.get('/', function(req, res) {
 	var data = {};   
 	res.render('index', data);   
 });   
-```
+```    
+    
+# layoyt    
+default value is 'views/layout/default.atpl'    
+    
+## render with default layout    
+    
+```    
+app.get('/', function(req, res) {       
+	var data = {};       
+	res.render('index', data);    
+	// render layout/default.atpl with index.atpl as `body`     
+});       
+```    
+    
+## render with special layout     
+    
+```    
+app.get('/', function(req, res) {      
+	res.render('index', {layout: 'layout/default'});       
+});       
+```    
+    
+## render with no layout    
+    
+```    
+app.get('/', function(req, res) {      
+	res.render('index', {layout: false});       
+});       
+```    
+    

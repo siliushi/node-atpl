@@ -1,6 +1,6 @@
 {
   "name": "node-atpl",
-  "version": "1.0.2",
+  "version": "1.1.2",
   "description": "JavaScript template",
   "main": "./src/atpl.js",
   "directories": {

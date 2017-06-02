@@ -1,0 +1,19 @@
+{
+  "name": "node-atpl",
+  "authors": [
+    "ganzw <ganzwen@gmail.com>"
+  ],
+  "description": "node.js template",
+  "main": "index.js",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}
